@@ -1,0 +1,58 @@
+Employee Database
+---------------------------------------
+Nodes:
+employee
+department
+skillset
+projects
+
+Relationships:
+employee.........[works_in]............department
+employee.........[acquired]............skillset
+employee.........[assigned_to].........project
+project..........[controlled_by].......department
+employee.........[Project_manager].....project
+
+---------------------------------------
+
+Create (Emp1:emp{name:"Kevin",qualification:"MSc CS", experience:8})
+Create (Emp3:emp{name:"Larry",qualification:"PHD", experience:10})
+Create (Emp2:emp{name:"Harry",qualification:"MSc CS", experience:9})
+
+Create (Dep1:dep{name:"Development",no_of_employees:5})
+Create (Dep2:dep{name:"Test Teams",no_of_employees:4})
+Create (Dep3:dep{name:"Customer Support",no_of_employees:3})
+
+Create (Skill1:skillset{name:"skill1",skill:['Good Coding','Java Developer','Python Developer']})
+Create (Skill2:skillset{name:"skill2",skill:['Optimistic','Leadership Qualities','Pro Coder']})
+Create (Skill3:skillset{name:"skill3",skill:['Positive Behaviour','Good Communication']})
+
+create (Poject1:project{name:"Bank Management", time_span:'35 days'})
+create (Poject2:project{name:"Food Delivery app", time_span:'30 days'})
+
+---------------------------------------
+match (a:emp),(b:dep) where a.name="Kevin" and b.name="Development" Create (a)-[r1:Works_in]->(b)
+match (a:emp),(b:dep) where a.name="Harry" and b.name="Customer Support" Create (a)-[r2:Works_in]->(b)
+match (a:emp),(b:dep) where a.name="Larry" and b.name="Test Teams" Create (a)-[r3:Works_in]->(b)
+
+match (a:emp),(b:skillset) where a.name="Kevin" and b.name="skill1" Create (a)-[r4:acquired]->(b)
+match (a:emp),(b:skillset) where a.name="Larry" and b.name="skill2" Create (a)-[r5:acquired]->(b)
+match (a:emp),(b:skillset) where a.name="Harry" and b.name="skill3" Create (a)-[r6:acquired]->(b)
+
+match (a:emp),(b:project) where a.name="Kevin" and b.name="Bank Management" Create (a)-[r7:assigned_to]->(b)
+match (a:emp),(b:project) where a.name="Larry" and b.name="Food Delivery app" Create (a)-[r8:assigned_to]->(b)
+
+match (a:project),(b:dep) where a.name="Bank Management" and b.name="Development" Create (a)-[r9:controlled_by]->(b)
+match (a:project),(b:dep) where a.name="Bank Management" and b.name="Test Teams" Create (a)-[r10:controlled_by]->(b)
+match (a:project),(b:dep) where a.name="Food Delivery app" and b.name="Test Teams" Create (a)-[r11:controlled_by]->(b)
+
+match (a:emp),(b:project) where a.name="Kevin" and b.name="Bank Management" Create (a)-[r12:Project_manager]->(b)
+match (a:emp),(b:project) where a.name="Larry" and b.name="Food Delivery app" Create (a)-[r13:Project_manager]->(b)
+
+----------------
+match (a:emp)-[:Works_in]->(b:dep) where b.name="Development" return a
+match (a:project)-[:controlled_by]->(b:dep) where b.name="Test Teams" return a
+match (a:project)-[:controlled_by]->(b:dep)<-[Works_in]-(c:emp) where c.name="Kevin" return a,b
+match (a:emp)-[:acquired]->(b:skillset) where a.name="Larry"
+
+

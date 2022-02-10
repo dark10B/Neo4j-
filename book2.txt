@@ -1,0 +1,42 @@
+-----------------------------
+#Nodes
+book
+person:authors,translators,reviewers,readers,suppliers
+publisher
+
+#Relationships
+books.....published by.....publisher
+books.....reviewed by......reviewers
+books.....transalated by....translators
+books......issued by.......reader
+books......returned by.....reader
+-----------------------------
+
+create(author:person{name:"Jack Rogers"})
+create(transalator:person{name:"Kevin Wills"})
+create(reviewer1:person1{name:"Elon"})
+create(reviewer2:person2{name:"Jeff"})
+
+create(reviewer1:rev{name:"Elon"})
+create(reviewer2:rev{name:"Jeff"})
+
+create(reader:person{name:"John"})
+create(supplier:person{name:"Rahul"})
+
+create(publisher:publisher{name:"AK Publisher"})
+
+create(book1:book{title:"One man in Heavan"})
+
+match (a:person),(b:book) where a.name="Jack Rogers" and b.title="One man in Heavan" create (a)-[r1:Wrote]->(b)
+match (a:person),(b:book) where a.name="Kevin Wills" and b.title="One man in Heavan" create (a)-[r2:Transalates]->(b)
+
+match (a:rev),(b:book) where a.name="Elon" and b.title="One man in Heavan" create (a)-[r3:Reviwed]->(b)
+match (a:rev),(b:book) where a.name="Jeff" and b.title="One man in Heavan" create (a)-[r7:Reviwed]->(b)
+
+match (a:person),(b:book) where a.name="John" and b.title="One man in Heavan" create (a)-[r4:Reads]->(b)
+match (a:person),(b:book) where a.name="Rahul" and b.title="One man in Heavan" create (b)-[r5:Supplied_by]->(a)
+match (a:publisher),(b:book) where a.name="AK Publisher" and b.title="One man in Heavan" create (b)-[r6:Published_by]->(a)
+
+
+match (a:book)-[:Published_by]->(b:publisher) where a.title="One man in Heavan" return b
+match (a:person)-[:Reads]->(b:book) where b.title="One man in Heavan" return a

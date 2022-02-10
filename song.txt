@@ -1,0 +1,35 @@
+Song database
+---------------------------------
+#nodes
+Artists
+Song
+Recording company
+recording studio
+songauthor
+
+#Relationships
+Artists......performs......song.....written_by......songauthor
+song.....recoded_in......recordingStudio.....managed_by......recordingComapny
+recordingComapny.......finances......song
+---------------------------------
+
+Create(Artist:Person{name:'Luis'})
+Create(Song:song{name:'Tu hi haqeeqat'})
+Create(SongAuthor:Person{name:'Javed Ali'})
+Create(RecordingCompany:RC{name:'T-Series'})
+Create(RecordingStudio:RS{place:'Mumbai'})
+
+match (a:Person),(b:song) where a.name="Luis" and b.name="Tu hi haqeeqat" create (a)-[r1:Performs]->(b)
+match (a:song),(b:Person) where a.name="Tu hi haqeeqat" and b.name="Javed Ali" create (a)-[r2:Written_by]->(b)
+match (a:song),(b:RS) where a.name="Tu hi haqeeqat" and b.place="Mumbai" create (a)-[r3:Recorded_in]->(b)
+match (a:RS),(b:RC) where a.place="Mumbai" and b.name="T-Series" create (a)-[r4:Managed_by]->(b)
+match (a:RC),(b:song) where a.name="T-Series" and b.name="Tu hi haqeeqat" create (a)-[r5:Finances]->(b)
+
+
+match (a:Person)-[Performs]->(b:song) where b.name="Tu hi haqeeqat" return a
+match (a:RS)-[Recorded_in]-(b:song) where a.place="Mumbai" return b
+match (a:song)-[Written_by]->(b:Person) where b.name="Javed Ali" return a 
+match (a:RC)-[Finances]->(b:song) where b.name="Tu hi haqeeqat" return a
+
+
+
